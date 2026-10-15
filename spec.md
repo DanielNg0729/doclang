@@ -55,6 +55,22 @@ For the purposes of this document, the following terms and definitions apply. Te
 
    A cohesive and meaningful part of document content, e.g. a table, list item with a marker, a bold piece of text, etc.
 
+### Roles
+
+An implementation may act in one or more of the following roles.
+
+1. **producer**
+
+   An implementation that creates DocLang instances.
+
+2. **processor**
+
+   An implementation that reads, transforms or renders DocLang instances.
+
+3. **validator**
+
+   A processor that checks DocLang instances against this document.
+
 ### Adopted from XML
 
 1. **element**
@@ -82,6 +98,31 @@ For the purposes of this document, the following terms and definitions apply. Te
    An element that can be used *within* a block element to shape its in-line structure; a typical HTML example is the `span` element.
 
    Note 1 to entry: Whether block-level or inline, an element may contain *explicit* new lines.
+
+## Conformance
+
+A DocLang instance conforms to this document if it satisfies all the requirements specified in it. Schemas for checking instances (an XSD [3] schema and Schematron rules) are provided with the reference toolkit of the DocLang Project. They are aids, not a definition of conformance: in case of discrepancies, this document is authoritative.
+
+Requirements addressed to a producer, processor or validator apply to implementations acting in that role. A producer SHOULD ensure that the instances it produces conform, for example by validating its output and rejecting or repairing non-conforming results.
+
+### Version
+
+A DocLang instance states the version of this document it is intended to conform to, in `MAJOR.MINOR` format, through the `version` attribute of the root `<doclang>` element.
+
+### Compatibility
+
+The versions of this document follow the principles of Semantic Versioning [7] (considering X >= 1, and Y < Z):
+
+- A DocLang instance that conforms to version `X.Y` also conforms to version `X.Z`.
+- A DocLang instance that conforms to version `X.Z` need not conform to version `X.Y`.
+
+**Example:**
+- A `1.0` instance conforms to version `1.1`
+- A `1.1` instance need not conform to version `1.0`
+
+### Schema versions
+
+A schema may additionally carry a patch version, i.e. a full Semantic Versioning string (e.g., `1.0.0`, `1.0.1`), to track schema-level changes that do not affect document compatibility.
 
 ## Language Design Principles
 
@@ -187,25 +228,6 @@ In the example further below:
   </picture>
 </doclang>
 ```
-
-### Version Management and Compatibility
-
-DocLang instances define a version in `MAJOR.MINOR` format through the `version` attribute of the root `<doclang>` element. This indicates the version of this document against which the instance is intended to be validated.
-
-#### Semantic Versioning Principles
-
-The XSD [3] schema used for validating DocLang XML documents defines the specification versions it supports based on Semantic Versioning [7] principles, i.e. considering X >= 1, and Y < Z:
-
-- A DocLang instance with version `X.Y` is compatible with an XSD schema with version `X.Z`, i.e. a DocLang instance that is valid against schema `X.Y` will also successfully validate against schema `X.Z`.
-- A DocLang instance with version `X.Z` is considered incompatible with an XSD schema with version `X.Y`, i.e. a DocLang instance that is valid against schema `X.Z` need not be successfully validate against `X.Y`.
-
-**Example:**
-- A `1.0` document is compatible with a `1.1` schema
-- A `1.1` document is considered incompatible with a `1.0` schema
-
-#### XSD Schema Versioning
-
-The XSD schema itself may additionally capture a patch version and internally define a full Semantic Versioning (SemVer) version string (e.g., `1.0.0`, `1.0.1`) to track schema-level changes that do not affect document compatibility.
 
 ## Language Specification
 
