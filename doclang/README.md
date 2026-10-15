@@ -31,6 +31,25 @@ On a minimal install, pass `xsd_only=True` for XSD-only validation, or supply a 
 doclang validate my_document.dclg
 ```
 
+The schema is chosen as follows:
+
+1. `--spec-version X.Y` (Python: `spec_version="X.Y"`) uses the bundled schema of that version, overriding the
+   document's own. It is an error if there is none.
+2. Otherwise the spec version in the `version` attribute of the document's root element is used.
+3. Otherwise the latest schema (the development head) is used, with a warning. This covers documents that
+   declare no version, and (with a warning naming the version) documents whose declared version has no bundled
+   schema. Pass `--strict-declared-version` (Python: `strict_declared_version=True`) to fail in the latter case.
+
+The latest released schema of each spec minor version is bundled in `doclang/schemas/<MAJOR.MINOR>/`.
+The schema directly in `doclang/` is the development head.
+
+> **Note on 0.7:** the 0.7 XSD only accepts `0.7` in the root `version` attribute (later versions only
+> require the `MAJOR.MINOR` format). So that a document declaring another version (e.g. `0.8`) can be
+> checked against the 0.7 rules, the toolkit by default replaces the declared `version` with `0.7` in
+> memory for XSD validation (the file is not modified), and says so in a note. The declared version itself
+> is then not checked; all other 0.7 rules are still checked. Use `--strict-xsd-version-attr` (Python:
+> `strict_xsd_version_attr=True`) to apply the XSD's version check as is, in which case such a document fails.
+
 #### More validation scenarios
 
 ```bash
@@ -45,6 +64,12 @@ doclang validate my_document.dclg --schematron-only
 
 # JSON output
 doclang validate my_document.dclg --format json
+
+# Validate against a specific spec version (overrides the document's `version`)
+doclang validate my_document.dclg --spec-version 0.7
+
+# ... and apply the XSD's own `version` attribute check as is
+doclang validate my_document.dclg --spec-version 0.7 --strict-xsd-version-attr
 
 # Quiet mode (exit code only)
 doclang validate my_document.dclg --quiet

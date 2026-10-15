@@ -109,6 +109,14 @@ Requirements addressed to a producer, processor or validator apply to implementa
 
 A DocLang instance states the version of this document it is intended to conform to, in `MAJOR.MINOR` format, through the `version` attribute of the root `<doclang>` element.
 
+### Omitted version
+
+The `version` attribute is optional. If it is omitted, the version of the instance is unspecified: it is neither implied to be the version of this document nor any earlier version.
+
+- A producer SHOULD always set `version`.
+- A validator SHOULD validate an instance with an unspecified version against the latest version of this document it supports, and SHOULD warn that no version was declared.
+- A validator MAY allow the user to explicitly select the version to validate against, overriding the declared one.
+
 ### Compatibility
 
 The versions of this document follow the principles of Semantic Versioning [7] (considering X >= 1, and Y < Z):
@@ -123,6 +131,8 @@ The versions of this document follow the principles of Semantic Versioning [7] (
 ### Schema versions
 
 A schema may additionally carry a patch version, i.e. a full Semantic Versioning string (e.g., `1.0.0`, `1.0.1`), to track schema-level changes that do not affect document compatibility.
+
+The XSD schema constrains the `version` attribute of the root `<doclang>` element only to the `MAJOR.MINOR` format; selecting the schema that corresponds to an instance's version is the responsibility of the validator.
 
 ## Language Design Principles
 
@@ -2088,7 +2098,7 @@ Exists exactly once, as root element.
 | Attribute | Required / Optional | Allowed Values | Description |
 |-----------|----------|----------------|-------------|
 | `xmlns` | Optional; default: "https://www.doclang.ai/ns/v0" | {"https://www.doclang.ai/ns/v0"} | The DocLang specification version namespace. |
-| `version` | Optional; default: "0.7" | {"0.7"} | The DocLang specification version the DocLang instance is supposed to validate against, in "MAJOR.MINOR" format, i.e. first two positions of Semantic Verisoning. |
+| `version` | Optional; if omitted, the version is unspecified | "MAJOR.MINOR" of a published DocLang specification version | The DocLang specification version the DocLang instance is supposed to validate against, in "MAJOR.MINOR" format, i.e. first two positions of Semantic Versioning. If omitted, the version is unspecified (see [Omitted version](#omitted-version)). |
 
 ###### Allowed Content Types
 
